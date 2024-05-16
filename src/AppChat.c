@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+const struct AppChatOpsType AppChat_Operations = {
+    .pOnStart = OnStart,
+};
+
 
 // Static variables for singleton pattern
 static AppChat* AppChatInstance = NULL;
@@ -20,7 +24,7 @@ static AppChat* AppChat_new(int portno)
     printf("Allocate AppChatInstance successfully\n");
     AppChatInstance->portNo = portno;
     printf("port is %d\n",AppChatInstance->portNo);
-
+    AppChat_Operations.pOnStart();
     if (connmgr == NULL)
     {
         connmgr = ConnectionManager_new(portno);
@@ -68,3 +72,10 @@ void AppChatClean() {
     }
 
 }
+
+int OnStart(void)
+{
+    printf("On start\n");
+    return 0;
+}
+    
