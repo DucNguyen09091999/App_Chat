@@ -7,6 +7,10 @@
 #include <sys/ioctl.h>
 #include <net/if.h>
 
+const struct ConnectionManagerOpsType ConnectionManager_Operations = {
+    .pCntMngOnStart = CntOnStart,
+};
+
 
 // Initialize a new instance of ConnectionManager
 ConnectionManager* ConnectionManager_new(int port) {
@@ -53,4 +57,30 @@ void ConnectionManager_delete(ConnectionManager* self) {
         free(self);
         printf("Free CntManger successfully\n");
     }
+}
+
+
+int CntOnStart(void)
+{
+//    tcp_socket_t *sPointer = NULL;
+
+//     // Initially array for 1 element (listening server)
+//     if (tcpOpen(&sPointer, serverListeningPort) != TCP_NO_ERROR) {
+//         printf("ConnectionManager: failed to start\n");
+//         return FAILURE;
+//     }
+
+//     serverConnection.id = activeConnections.size() + 1;
+//     serverConnection.sd = sPointer->sd;
+//     serverConnection.port = serverListeningPort;
+//     serverConnection.ipAddress = serverIPAddress;
+//     activeConnections.push_back(serverConnection);
+
+//     if (pthread_create(&threadID, NULL, &connectionManagerThread, NULL)) {
+//         cerr << "ConnectionManager: " << __func__ << " " << __LINE__ << endl;
+//         return -1;
+//     }
+
+    printf("ConnectionManager: start successfully\n");
+    return 0;  
 }

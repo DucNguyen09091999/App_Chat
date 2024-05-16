@@ -24,11 +24,11 @@ static AppChat* AppChat_new(int portno)
     printf("Allocate AppChatInstance successfully\n");
     AppChatInstance->portNo = portno;
     printf("port is %d\n",AppChatInstance->portNo);
-    AppChat_Operations.pOnStart();
     if (connmgr == NULL)
     {
         connmgr = ConnectionManager_new(portno);
     }
+    ConnectionManager_Operations.pCntMngOnStart();
 
     return AppChatInstance;
 }
