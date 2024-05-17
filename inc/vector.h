@@ -17,6 +17,7 @@ struct VectorOpsType {
     void (*pFree)(Vector* vector);
     tcp_socket_t (*pBegin)(Vector* vector);
     tcp_socket_t (*pEnd)(Vector* vector);
+    tcp_socket_t (*pCurrent)(Vector* vector, int index);
     int (*pSize)(Vector* vector);
 };
 
@@ -30,6 +31,7 @@ void vector_free(Vector* vector);
 tcp_socket_t vector_begin(Vector* vector);
 tcp_socket_t vector_end(Vector* vector);
 int vector_size(Vector* vector);
+tcp_socket_t vector_current(Vector* vector, int index);
 extern Vector activeConnections;
 extern const struct VectorOpsType Vector_Operations;
 

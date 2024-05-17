@@ -195,12 +195,13 @@ static void *connectionManagerThread(void *arg)
 
                     for (int j = 0; j < Vector_Operations.pSize(&activeConnections); j++) 
                     {
-                        // if (activeConnections[j].sd == poll_fds[i].fd) 
-                        // {
-                        //     printf("\nMessage received from %s\n", activeConnections[j].ipAddress);
-                        //     printf("Sender’s Port: <%d>\n", ntohs(activeConnections[j].port));
-                        //     break;
-                        // }
+                        tcp_socket_t t_Current = Vector_Operations.pCurrent(&activeConnections, j);
+                        if (t_Current.sd == poll_fds[i].fd) 
+                        {
+                            printf("\nMessage received from %s\n", t_Current.ipAddress);
+                            printf("Sender’s Port: <%d>\n", ntohs(t_Current.port));
+                            break;
+                        }
                     }
                     printf("Message: %s\n",reciveBuffer );
                     //cout << "Message: " << reciveBuffer << endl;
@@ -209,6 +210,7 @@ static void *connectionManagerThread(void *arg)
             }
         }
     }
+    printf("thread oke\n");
     return 0;
 }
 

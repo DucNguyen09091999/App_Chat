@@ -6,7 +6,8 @@ const struct VectorOpsType Vector_Operations = {
     .pFree = vector_free,
     .pBegin = vector_begin,
     .pEnd = vector_end,
-    .pSize = vector_size
+    .pSize = vector_size,
+    .pCurrent = vector_current
 };
 
 Vector activeConnections;
@@ -77,4 +78,15 @@ int vector_size(Vector* vector)
         exit(EXIT_FAILURE);
     }
 
+}
+
+tcp_socket_t vector_current(Vector* vector, int index)
+{
+    if (vector->size > 0) {
+        return vector->data[index];
+    } else {
+        fprintf(stderr, "Vector is empty.\n");
+        // You can decide how to handle this case; for example, return a default value or exit
+        exit(EXIT_FAILURE);
+    }  
 }
