@@ -30,6 +30,7 @@ typedef struct tcp_socket {
 typedef struct ConnectionManager {
     int serverListeningPort;
     char serverIPAddress[15];
+    pthread_t threadID; 
 } ConnectionManager;
 
 struct ConnectionManagerOpsType {

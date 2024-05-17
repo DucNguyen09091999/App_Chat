@@ -3,7 +3,10 @@
 const struct VectorOpsType Vector_Operations = {
     .pInit = vector_init,
     .pAdd = vector_add,
-    .pFree = vector_free
+    .pFree = vector_free,
+    .pBegin = vector_begin,
+    .pEnd = vector_end,
+    .pSize = vector_size
 };
 
 Vector activeConnections;
@@ -40,4 +43,38 @@ void vector_free(Vector* vector) {
     vector->size = 0;
     vector->capacity = 0;
     printf("vector free\n");
+}
+
+
+tcp_socket_t vector_begin(Vector* vector)
+{
+    if (vector->size > 0) {
+        return vector->data[0];
+    } else {
+        fprintf(stderr, "Vector is empty.\n");
+        // You can decide how to handle this case; for example, return a default value or exit
+        exit(EXIT_FAILURE);
+    }   
+}
+
+tcp_socket_t vector_end(Vector* vector) {
+    if (vector->size > 0) {
+        return vector->data[vector->size - 1];
+    } else {
+        fprintf(stderr, "Vector is empty.\n");
+        // You can decide how to handle this case; for example, return a default value or exit
+        exit(EXIT_FAILURE);
+    }
+}
+
+int vector_size(Vector* vector)
+{    
+    if (vector->size > 0) {
+        return vector->size;
+    } else {
+        fprintf(stderr, "Vector is empty.\n");
+        // You can decide how to handle this case; for example, return a default value or exit
+        exit(EXIT_FAILURE);
+    }
+
 }

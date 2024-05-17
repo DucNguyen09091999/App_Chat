@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -I./inc/ -fms-extensions
+CFLAGS = -Wall -Wextra -I./inc/ -fms-extensions -pthread
 SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = bin
