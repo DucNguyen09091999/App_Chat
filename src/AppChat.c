@@ -28,7 +28,7 @@ static AppChat* AppChat_new(int portno)
     {
         connmgr = ConnectionManager_new(portno);
     }
-    ConnectionManager_Operations.pCntMngOnStart();
+    ConnectionManager_Operations.pCntMngOnStart(connmgr);
 
     return AppChatInstance;
 }

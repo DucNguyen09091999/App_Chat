@@ -7,8 +7,10 @@
 #include <sys/ioctl.h>
 #include <net/if.h>
 
+static tcp_socket_t serverConnection;
 const struct ConnectionManagerOpsType ConnectionManager_Operations = {
     .pCntMngOnStart = CntOnStart,
+    .pTcpOpen = TCPOpen,
 };
 
 
@@ -55,25 +57,65 @@ ConnectionManager* ConnectionManager_new(int port) {
 void ConnectionManager_delete(ConnectionManager* self) {
     if (self != NULL) {
         free(self);
-        printf("Free CntManger successfully\n");
+        //printf("Free CntManger successfully\n");
     }
 }
 
+int TCPOpen(tcp_socket_t** tcpSocket, int port)
+{
+    int result, opt;
+    struct sockaddr_in addr;
+    tcp_socket_t *tmpSocket;
 
-int CntOnStart(void)
+    tmpSocket = (tcp_socket_t *)malloc(sizeof(tcp_socket_t));
+
+    tmpSocket->sd = socket(AF_INET, SOCK_STREAM, 0);
+
+    if (tmpSocket->sd == FAILURE)
+    {
+        printf("Create socket failure\n");
+    }
+
+    if (setsockopt(tmpSocket->sd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
+    {
+        printf("Set socket opt failure\n");
+    }
+
+    memset(&addr, 0, sizeof(struct sockaddr_in));
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    if (bind(tmpSocket->sd, (struct sockaddr*)&addr, sizeof(addr)) == FAILURE)
+    {
+        printf("Binding socket failure\n");
+    }
+
+    if (listen(tmpSocket->sd, MAX_PENDING) == -1)
+    {
+        printf("Listening socket failure\n");
+    }
+ 
+    (*tcpSocket) = tmpSocket;
+    return TCP_NO_ERROR;
+
+}
+
+
+int CntOnStart(ConnectionManager* manager)
 {
 //    tcp_socket_t *sPointer = NULL;
 
 //     // Initially array for 1 element (listening server)
-//     if (tcpOpen(&sPointer, serverListeningPort) != TCP_NO_ERROR) {
+//     if (TCPOpen(&sPointer, manager->serverListeningPort) != TCP_NO_ERROR) {
 //         printf("ConnectionManager: failed to start\n");
 //         return FAILURE;
 //     }
 
 //     serverConnection.id = activeConnections.size() + 1;
 //     serverConnection.sd = sPointer->sd;
-//     serverConnection.port = serverListeningPort;
-//     serverConnection.ipAddress = serverIPAddress;
+//     serverConnection.port = manager->serverListeningPort;
+//     serverConnection.ipAddress = manager->serverIPAddress;
 //     activeConnections.push_back(serverConnection);
 
 //     if (pthread_create(&threadID, NULL, &connectionManagerThread, NULL)) {
@@ -81,6 +123,6 @@ int CntOnStart(void)
 //         return -1;
 //     }
 
-    printf("ConnectionManager: start successfully\n");
+    printf("ConnectionManager: start successfully %s %d\n",manager->serverIPAddress, manager->serverListeningPort);
     return 0;  
 }
