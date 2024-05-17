@@ -1,5 +1,10 @@
 #include "vector.h"
 
+const struct VectorOpsType Vector_Operations = {
+    .pInit = vector_init,
+    .pAdd = vector_add,
+    .pFree = vector_free
+};
 
 Vector activeConnections;
 
@@ -26,6 +31,7 @@ void vector_add(Vector* vector, tcp_socket_t element) {
         vector->capacity = new_capacity;
     }
     vector->data[vector->size++] = element;
+    printf("vector add\n");
 }
 
 void vector_free(Vector* vector) {
@@ -33,4 +39,5 @@ void vector_free(Vector* vector) {
     vector->data = NULL;
     vector->size = 0;
     vector->capacity = 0;
+    printf("vector free\n");
 }

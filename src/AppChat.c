@@ -30,7 +30,7 @@ static AppChat* AppChat_new(int portno)
         connmgr = ConnectionManager_new(portno);
     }
     // Initialize the activeConnections vector with a capacity of 10
-    vector_init(&activeConnections, 10);
+    Vector_Operations.pInit(&activeConnections, 10);
 
     ConnectionManager_Operations.pCntMngOnStart(connmgr);
 

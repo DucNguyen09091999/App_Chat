@@ -132,7 +132,7 @@ int CntOnStart(ConnectionManager* manager)
     serverConnection.port = manager->serverListeningPort;
     //serverConnection.ipAddress = manager->serverIPAddress;
     strncpy(serverConnection.ipAddress, manager->serverIPAddress, sizeof(serverConnection.ipAddress) - 1);
-    vector_add(&activeConnections, serverConnection);
+    Vector_Operations.pAdd(&activeConnections, serverConnection);
 
     // if (pthread_create(&threadID, NULL, &connectionManagerThread, NULL)) {
     //     cerr << "ConnectionManager: " << __func__ << " " << __LINE__ << endl;
