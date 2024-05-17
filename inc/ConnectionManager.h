@@ -23,7 +23,7 @@ typedef struct tcp_socket {
     int id;
     int sd;
     int port;
-    char ipAddress;
+    char ipAddress[16];
 } tcp_socket_t;
 
 // Forward declaration of ConnectionManager
@@ -34,7 +34,7 @@ typedef struct ConnectionManager {
 
 struct ConnectionManagerOpsType {
     int (*pCntMngOnStart)(ConnectionManager* manager);
-    int (*pTcpOpen)(tcp_socket_t *socket, int port);
+    int (*pTcpOpen)(tcp_socket_t **socket, int port);
 };
 
 struct ConnectionManagerOpsType;

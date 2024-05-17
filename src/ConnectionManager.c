@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <sys/ioctl.h>
 #include <net/if.h>
+#include "vector.h"
 
 static tcp_socket_t serverConnection;
 const struct ConnectionManagerOpsType ConnectionManager_Operations = {
@@ -69,16 +70,26 @@ int TCPOpen(tcp_socket_t** tcpSocket, int port)
 
     tmpSocket = (tcp_socket_t *)malloc(sizeof(tcp_socket_t));
 
+    if(!tmpSocket)
+    {
+        printf("Malloc failure\n");
+        return FAILURE;
+    }
+
     tmpSocket->sd = socket(AF_INET, SOCK_STREAM, 0);
 
     if (tmpSocket->sd == FAILURE)
     {
         printf("Create socket failure\n");
+        free(tmpSocket);
+        return FAILURE;
     }
 
     if (setsockopt(tmpSocket->sd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
     {
         printf("Set socket opt failure\n");
+        free(tmpSocket);
+        return FAILURE;
     }
 
     memset(&addr, 0, sizeof(struct sockaddr_in));
@@ -89,11 +100,15 @@ int TCPOpen(tcp_socket_t** tcpSocket, int port)
     if (bind(tmpSocket->sd, (struct sockaddr*)&addr, sizeof(addr)) == FAILURE)
     {
         printf("Binding socket failure\n");
+        free(tmpSocket);
+        return FAILURE;
     }
 
     if (listen(tmpSocket->sd, MAX_PENDING) == -1)
     {
         printf("Listening socket failure\n");
+        free(tmpSocket);
+        return FAILURE;
     }
  
     (*tcpSocket) = tmpSocket;
@@ -104,25 +119,26 @@ int TCPOpen(tcp_socket_t** tcpSocket, int port)
 
 int CntOnStart(ConnectionManager* manager)
 {
-//    tcp_socket_t *sPointer = NULL;
+   tcp_socket_t *sPointer = NULL;
 
-//     // Initially array for 1 element (listening server)
-//     if (TCPOpen(&sPointer, manager->serverListeningPort) != TCP_NO_ERROR) {
-//         printf("ConnectionManager: failed to start\n");
-//         return FAILURE;
-//     }
+    // Initially array for 1 element (listening server)
+    if (TCPOpen(&sPointer, manager->serverListeningPort) != TCP_NO_ERROR) {
+        printf("ConnectionManager: failed to start\n");
+        return FAILURE;
+    }
 
-//     serverConnection.id = activeConnections.size() + 1;
-//     serverConnection.sd = sPointer->sd;
-//     serverConnection.port = manager->serverListeningPort;
-//     serverConnection.ipAddress = manager->serverIPAddress;
-//     activeConnections.push_back(serverConnection);
+    serverConnection.id = activeConnections.size + 1;
+    serverConnection.sd = sPointer->sd;
+    serverConnection.port = manager->serverListeningPort;
+    //serverConnection.ipAddress = manager->serverIPAddress;
+    strncpy(serverConnection.ipAddress, manager->serverIPAddress, sizeof(serverConnection.ipAddress) - 1);
+    vector_add(&activeConnections, serverConnection);
 
-//     if (pthread_create(&threadID, NULL, &connectionManagerThread, NULL)) {
-//         cerr << "ConnectionManager: " << __func__ << " " << __LINE__ << endl;
-//         return -1;
-//     }
+    // if (pthread_create(&threadID, NULL, &connectionManagerThread, NULL)) {
+    //     cerr << "ConnectionManager: " << __func__ << " " << __LINE__ << endl;
+    //     return -1;
+    // }
 
-    printf("ConnectionManager: start successfully %s %d\n",manager->serverIPAddress, manager->serverListeningPort);
+    printf("ConnectionManager: start successfully\n");
     return 0;  
 }

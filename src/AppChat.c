@@ -1,5 +1,6 @@
 #include "AppChat.h"
 #include "ConnectionManager.h"
+#include "vector.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -28,6 +29,9 @@ static AppChat* AppChat_new(int portno)
     {
         connmgr = ConnectionManager_new(portno);
     }
+    // Initialize the activeConnections vector with a capacity of 10
+    vector_init(&activeConnections, 10);
+
     ConnectionManager_Operations.pCntMngOnStart(connmgr);
 
     return AppChatInstance;
@@ -70,6 +74,8 @@ void AppChatClean() {
         printf("Release connmgr successfully\n");
         connmgr = NULL;
     }
+    // Clean up the activeConnections vector
+    vector_free(&activeConnections);
 
 }
 
