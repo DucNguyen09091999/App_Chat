@@ -7,7 +7,9 @@ typedef struct AppChat {
 }AppChat;
 
 struct AppChatOpsType {
-    int (*pOnStart)(void);
+    void (*pOnStart)(void);
+    void (*pMenu)(void);
+    void (*pHelp)(void);
 };
 
 struct AppChatOpsType;
@@ -15,7 +17,9 @@ struct AppChatOpsType;
 // Function prototypes
 AppChat* AppChatGetInstance(int PortNo);
 void AppChatClean();
-int OnStart(void);
+void OnStart(void);
+void DisplayMenu();
+void DisplayHelp();
 extern const struct AppChatOpsType AppChat_Operations;
 
 #endif

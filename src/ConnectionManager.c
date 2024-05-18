@@ -14,7 +14,20 @@ static tcp_socket_t serverConnection;
 static int serverFd;
 const struct ConnectionManagerOpsType ConnectionManager_Operations = {
     .pCntMngOnStart = CntOnStart,
+    .pIpAddress = DisplayIpAddress,
+    .pPortNo = DisplayPortNumber,
+    .pConToDes = ConnectToDestination,
+    .pShowALl = DisplayAllActiveConnection,
+    .pAdd = AddConnection,
+    .pTerminal = TerminalConnection,
+    .pSendData = SendDataToConnection,
     .pTcpOpen = TCPOpen,
+    .pTcpClose = TCPClose,
+    .pTcpSend = TCPSend,
+    .pTcpReceive = TCPReceived,
+    .pTCPGetAddr = TCPGetIpAddress,
+    .pTCPGetPort = TCPGetPort,
+    .pTCPGetSd = TCPGetSd
 };
 
 
@@ -227,7 +240,7 @@ int CntOnStart(ConnectionManager* manager)
     serverConnection.id = activeConnections.size + 1;
     serverConnection.sd = sPointer->sd;
     serverConnection.port = manager->serverListeningPort;
-    //serverConnection.ipAddress = manager->serverIPAddress;
+    //serverConnection.ipAddress = manager->serverIPAddress;n
     strncpy(serverConnection.ipAddress, manager->serverIPAddress, sizeof(serverConnection.ipAddress) - 1);
     Vector_Operations.pAdd(&activeConnections, serverConnection);
 
@@ -240,3 +253,57 @@ int CntOnStart(ConnectionManager* manager)
     printf("ConnectionManager: start successfully\n");
     return 0;  
 }
+
+
+void DisplayIpAddress()
+{
+
+};
+void DisplayPortNumber()
+{
+
+};
+int ConnectToDestination(char* destinationIP, int port)
+{
+
+};
+void DisplayAllActiveConnection()
+{
+
+};
+void AddConnection(const char* ipAddress, int port)
+{
+
+};
+bool TerminalConnection(int connectionID)
+{
+
+};
+bool SendDataToConnection(int connectionID)
+{
+
+};
+void TCPClose(tcp_socket_t** socket, int port)
+{
+
+};
+void TCPSend(tcp_socket_t* socket, void* buffer, int* size )
+{
+
+};
+void TCPReceived(tcp_socket_t* socket, void* buffer, int* size )
+{
+
+};
+void TCPGetIpAddress(tcp_socket_t* socket, char* ipAddress)
+{
+
+};
+void TCPGetPort(tcp_socket_t* socket, int* port)
+{
+
+};
+void TCPGetSd(tcp_socket_t* socket, int* sd)
+{
+
+};

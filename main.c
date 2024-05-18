@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
     printf("Welcome to chat application!\n");
 
     AppChat* app = AppChatGetInstance(atoi(argv[1]));
-
+    AppChat_Operations.pOnStart();
     AppChatClean();
     return 0;
 

@@ -3,9 +3,11 @@
 #include "vector.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <stdbool.h>
 const struct AppChatOpsType AppChat_Operations = {
     .pOnStart = OnStart,
+    .pMenu  = DisplayMenu,
+    .pHelp  = DisplayHelp
 };
 
 
@@ -79,9 +81,100 @@ void AppChatClean() {
 
 }
 
-int OnStart(void)
+void OnStart(void)
 {
-    printf("On start\n");
+    int option;
+    int port;
+    int connectionID;
+    bool success = false;
+    char destinationIP[100];
+    while (true) {
+        AppChat_Operations.pMenu();
+        printf("Select your option: ");
+        scanf("%d", &option);
+        system("clear");
+
+        switch (option) {
+            case 1:
+                AppChat_Operations.pHelp();
+                //return 0;
+
+            case 2:
+                //displayIPAdrress();
+                break;
+
+            case 3:
+                //displayPortNumber();
+                break;
+
+            case 4:
+                printf("Enter the destination IP address: ");
+                scanf("%s", destinationIP);
+                printf("Enter the port number: ");
+                scanf("%d", &port);
+
+                //connectToDestination(destinationIP, port);
+                break;
+
+            case 5:
+                //displayAllActiveConnection();
+                break;
+
+            case 6:
+                printf("Enter the connection ID: ");
+                scanf("%d", &connectionID);
+
+                //success = terminateConnection(connectionID);
+                //if (!success)
+                //    printf("Connection id %d is not valid\n", connectionID);
+                //break;
+
+            case 7:
+                printf("Enter the connection ID: ");
+                scanf("%d", &connectionID);
+
+                //sendDataToConnection(connectionID);
+                break;
+
+            case 0:
+                printf("Exit program\n");
+                return 0;
+
+            default:
+                break;
+        }
+    }
     return 0;
+}
+
+void DisplayMenu()
+{
+    printf("\n\n#################################################\n");
+    printf("Select these functions below\n");
+    printf("[1] help\t\n");
+    printf("[2] myip\t\n");
+    printf("[3] myport\t\n");
+    printf("[4] connect <destination> <port no>\t\n");
+    printf("[5] list\t\n");
+    printf("[6] terminate <connection id>\t\n");
+    printf("[7] send <connection id> <message>\t\n");
+    printf("[0] exit\t\n");
+}
+
+void DisplayHelp()
+{
+    printf("A Chat Application for Remote Message Exchange\n");
+    printf("[1] help  \tDisplay information about the available user interface options or command manual\n");
+    printf("[2] myip  \tDisplay the IP address of this process\n");
+    printf("[3] myport\tDisplay the port on which this process is listening for incoming connections\n");
+    printf("[4] connect <destination> <port no>\tThis command establishes a new TCP connection\n");
+    printf("                                   \t<destination>: The IP address of the computer\n");
+    printf("                                   \t<port no>: Port number\n");
+    printf("[5] list                           \tDisplay a numbered list of all the connections this process is part of\n");
+    printf("[6] terminate <connection id>      \tThis command will terminate the connection listed under the specified number\n");
+    printf("[7] send <connection id> <message> \tThis command will send the message to the host on the connection\n");
+    printf("                                   \t<connection id>: Connection id of machine\n");
+    printf("                                   \t<message>: The message to be sent\n");
+    printf("[0] exit                           \tExit program\n");
 }
     
