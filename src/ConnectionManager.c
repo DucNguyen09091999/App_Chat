@@ -255,29 +255,98 @@ int CntOnStart(ConnectionManager* manager)
 }
 
 
-void DisplayIpAddress()
+void DisplayIpAddress(ConnectionManager* manager)
 {
-
+    printf("System IP Address is: %s\n",manager->serverIPAddress);
 };
-void DisplayPortNumber()
+void DisplayPortNumber(ConnectionManager* manager)
 {
-
+    printf("Listening port is: %d\n",manager->serverListeningPort);
 };
 int ConnectToDestination(char* destinationIP, int port)
 {
+    tcp_socket_t serverConnection;
+    struct sockaddr_in serverAddr;
 
+    serverFd = socket(AF_INET, SOCK_STREAM, 0);
+    if (serverFd == -1) {
+        printf("Failed to create a socket\n");
+        return -1;
+    }
+
+    // Prepare the server address structure
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(port);
+    serverAddr.sin_addr.s_addr = inet_addr(destinationIP);
+
+    // Attempt to connect to the specified destination
+    if (connect(serverFd, (struct sockaddr*)(&serverAddr), sizeof(serverAddr)) == -1) {
+        printf("Failed to connect to the destination\n");
+        close(serverFd);
+        return false;
+    }
+
+    serverConnection.id = activeConnections.size + 1;
+    serverConnection.sd = serverFd;
+    serverConnection.port = port;
+    //serverConnection.ipAddress = manager->serverIPAddress;n
+    strncpy(serverConnection.ipAddress, destinationIP, sizeof(serverConnection.ipAddress) - 1);
+    Vector_Operations.pAdd(&activeConnections, serverConnection);
+
+    printf("Connected to %s on port %d\n", destinationIP, port);
+
+    return SUCCESS;
 };
 void DisplayAllActiveConnection()
 {
-
+    printf("List all active connections\n");
+    if (Vector_Operations.pEmpty(&activeConnections)) {
+        printf("No  active connections\n");
+    } else {
+        printf("id\tIP adrress\tPort No\n");
+        for (size_t i = 0; i < Vector_Operations.pSize(&activeConnections); ++i) {
+            tcp_socket_t t_Current = Vector_Operations.pCurrent(&activeConnections, i);
+            printf("%d\t%s\t%d\n",(i+1),t_Current.ipAddress, t_Current.port);
+        }
+    }
 };
 void AddConnection(const char* ipAddress, int port)
 {
+    tcp_socket_t newConnection;
 
+    serverConnection.id = activeConnections.size + 1;
+    newConnection.sd = -1;
+    newConnection.port = port;
+    strncpy(serverConnection.ipAddress, ipAddress, sizeof(serverConnection.ipAddress) - 1);
+    Vector_Operations.pAdd(&activeConnections, newConnection);
 };
 bool TerminalConnection(int connectionID)
 {
+    bool isConnectionIDValid = false;
 
+    // for (auto conn = activeConnections.begin(); conn != activeConnections.end();) {
+    //     if (conn->id == connectionID) {
+    //         conn = activeConnections.erase(conn);
+    //         isConnectionIDValid = true;
+    //     } else {
+    //         ++conn;
+    //     }
+    // }
+
+    for (int j = 0; j < Vector_Operations.pSize(&activeConnections); j++) 
+    {
+        tcp_socket_t t_Current = Vector_Operations.pCurrent(&activeConnections, j);
+        if (t_Current.id == connectionID) 
+        {
+            Vector_Operations.pRemove(&activeConnections, j);
+            isConnectionIDValid = true;
+        }
+    }
+
+    // reorganizeConnectionIds(activeConnections);
+    // displayAllActiveConnection();
+
+    return isConnectionIDValid;
 };
 bool SendDataToConnection(int connectionID)
 {

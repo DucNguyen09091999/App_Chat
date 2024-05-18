@@ -36,8 +36,8 @@ typedef struct ConnectionManager {
 
 struct ConnectionManagerOpsType {
     int (*pCntMngOnStart)(ConnectionManager* manager);
-    void (*pPortNo)(void);
-    void (*pIpAddress)(void);
+    void (*pPortNo)(ConnectionManager* manager);
+    void (*pIpAddress)(ConnectionManager* manager);
     void (*pConToDes)(char* destinationIP, int port);
     void (*pShowALl)(void);
     void (*pAdd)(const char* ipAddress, int port);
@@ -58,8 +58,8 @@ struct ConnectionManagerOpsType;
 // Function prototypes
 int CntOnStart(ConnectionManager* manager);
 int TCPOpen(tcp_socket_t** tcpSocket, int port);
-void DisplayIpAddress();
-void DisplayPortNumber();
+void DisplayIpAddress(ConnectionManager* manager);
+void DisplayPortNumber(ConnectionManager* manager);
 int ConnectToDestination(char* destinationIP, int port);
 void DisplayAllActiveConnection();
 void AddConnection(const char* ipAddress, int port);

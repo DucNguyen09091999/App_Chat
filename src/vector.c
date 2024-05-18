@@ -7,7 +7,9 @@ const struct VectorOpsType Vector_Operations = {
     .pBegin = vector_begin,
     .pEnd = vector_end,
     .pSize = vector_size,
-    .pCurrent = vector_current
+    .pCurrent = vector_current,
+    .pEmpty = vector_empty,
+    .pRemove = vector_remove
 };
 
 Vector activeConnections;
@@ -89,4 +91,29 @@ tcp_socket_t vector_current(Vector* vector, int index)
         // You can decide how to handle this case; for example, return a default value or exit
         exit(EXIT_FAILURE);
     }  
+}
+
+
+int vector_empty(Vector* vector)
+{    
+    if (vector->size > 0) {
+        return FAILURE;
+    } else {
+        //fprintf(stderr, "Vector is empty.\n");
+        // You can decide how to handle this case; for example, return a default value or exit
+        return SUCCESS;
+    }
+
+}
+
+void vector_remove(Vector* vector, size_t index)
+{
+    if (index >= vector->size) 
+    {
+        printf("Index out of bounds\n");
+        return;
+    }
+    // Move elements after the index to the left
+    memmove(&vector->data[index], &vector->data[index + 1], (vector->size - index - 1) * sizeof(tcp_socket_t));
+    vector->size--;
 }

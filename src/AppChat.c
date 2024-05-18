@@ -100,11 +100,11 @@ void OnStart(void)
                 //return 0;
 
             case 2:
-                //displayIPAdrress();
+                ConnectionManager_Operations.pIpAddress(connmgr);
                 break;
 
             case 3:
-                //displayPortNumber();
+                ConnectionManager_Operations.pPortNo(connmgr);
                 break;
 
             case 4:
@@ -113,11 +113,11 @@ void OnStart(void)
                 printf("Enter the port number: ");
                 scanf("%d", &port);
 
-                //connectToDestination(destinationIP, port);
+                ConnectionManager_Operations.pConToDes(destinationIP, port);
                 break;
 
             case 5:
-                //displayAllActiveConnection();
+                ConnectionManager_Operations.pShowALl();
                 break;
 
             case 6:
